@@ -1,0 +1,18 @@
+Bootstrap: localimage
+From: ubuntu_latest.simg
+
+%runscript
+    exec echo "The runscript is the containers default runtime command!"
+
+%post
+    cd /Libraries
+    git clone https://github.com/trilinos/Trilinos.git
+    cd /Libraries/Trilinos
+    git checkout trilinos-release-12-14-branch
+    mkdir build
+    cd build
+    echo 'cmake -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_C_COMPILER=mpicc -DCMAKE_INSTALL_PREFIX=/Libraries/Trilinos/install -DTrilinos_ENABLE_Fortran=OFF -DTPL_ENABLE_MPI=ON -DTrilinos_ENABLE_OpenMP=ON -DTrilinos_ENABLE_THREAD_SAFE=ON -DTrilinos_ENABLE_EXPLICIT_INSTANTIATION=ON -DTrilinos_HIDE_DEPRECATED_CODE=ON -DTrilinos_ENABLE_ALL_PACKAGES=ON -DTrilinos_ENABLE_PyTrilinos=OFF -DTrilinos_ENABLE_Kokkos=OFF -DTrilinos_ENABLE_NOX=OFF -DTrilinos_ENABLE_Piro=OFF -DTrilinos_ENABLE_Belos=OFF -DTrilinos_ENABLE_MueLu=ON -DTrilinos_ENABLE_OptiPack=OFF -DTrilinos_ENABLE_SEACAS=OFF -DTrilinos_ENABLE_GlobiPack=OFF -DTrilinos_ENABLE_Moertel=OFF -DTrilinos_VERBOSE_CONFIGURE=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_VERBOSE_MAKEFILE=OFF -DCMAKE_BUILD_TYPE=RELEASE -DTPL_ENABLE_HDF5=OFF -DTPL_ENABLE_Netcdf=ON ../ ' > configure-for-dealii.sh
+    sh configure-for-dealii.sh
+    make -j3
+    make install
+

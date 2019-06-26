@@ -1,0 +1,28 @@
+BootStrap: docker
+From: ubuntu:latest
+
+%environment
+  # use bash as default shell
+  SHELL=/bin/bash
+  export SHELL
+
+%runscript
+    exec echo "The runscript is the containers default runtime command!"
+
+%post
+    # load environment variables
+    . /environment
+    # use bash as default shell
+    echo 'SHELL=/bin/bash' >> /environment
+    # make environment file executable
+    chmod +x /environment
+
+    apt update
+    apt install -y git build-essential cmake libgcc-8-dev libopenmpi-dev vim libopenblas-dev
+    apt install -y cmake libnetcdf-dev
+    apt install -y libadolc-dev libgmsh-dev libgmsh3  liboce-foundation11 liboce-foundation-dev libparmetis-dev libmetis-dev libp4est-dev
+
+    echo "The post section is where you can install, and configure your container."
+    mkdir /Libraries
+    mkdir /Codes
+

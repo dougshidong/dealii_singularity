@@ -1,0 +1,18 @@
+Bootstrap: localimage
+#From: ubuntu18.04.simg
+From: trilinos.simg
+
+%runscript
+    exec echo "The runscript is the containers default runtime command!"
+
+%post
+    cd /Libraries
+    git clone https://github.com/dealii/dealii.git
+    cd /Libraries/dealii
+    git checkout dealii-9.1
+    mkdir build
+    cd build
+    cmake ../ -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_C_COMPILER=mpicc -DCMAKE_INSTALL_PREFIX=/Libraries/dealii/install -DDEAL_II_WITH_MPI=ON -DTRILINOS_DIR=/Libraries/Trilinos/install -DDEAL_II_ALLOW_BUNDLED=ON
+    make -j3 install
+
+    echo 'export DEAL_II_DIR=/Libraries/dealii/install' >> $SINGULARITY_ENVIRONMENT
